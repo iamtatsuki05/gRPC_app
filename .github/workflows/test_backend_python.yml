@@ -1,4 +1,4 @@
-name: Tests
+name: test_backend_python
 
 on:
   pull_request:
@@ -39,9 +39,11 @@ jobs:
           echo "PATH=$HOME/.local/bin:$PATH" >> $GITHUB_ENV
 
       - name: Install dependencies
+        working-directory: backend/python
         run: |
           poetry install
 
       - name: Run tests
+        working-directory: backend/python
         run: |
           poetry run tox
