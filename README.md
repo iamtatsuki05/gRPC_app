@@ -18,16 +18,12 @@ Please Open `http://localhost:3000/`
 ## Directory structure
 ```text
 ./
-├── .dockerignore
 ├── .git
-├── .gitattributes
 ├── .github
 ├── .gitignore
-├── Makefile
 ├── README.md
 ├── backend                      <- NodeJs, Golang, Python gRPC apps
 ├── compose.yaml
 ├── docs
-├── env.sample
 └── frontend                     <- React base Web
 ```
