@@ -3,13 +3,13 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
+      context: ./frontend/
       dockerfile: docker/Dockerfile
       args:
         progress: plain
     volumes:
       - type: bind
-        source: ./
+        source: ./frontend/
         target: /app
     working_dir: /app
     ports:
@@ -17,3 +17,70 @@ services:
     stdin_open: true
     tty: true
     command: bash -c "npm install && npm start"
+
+  backend_python:
+    tty: true
+    stdin_open: true
+    user: root
+    working_dir: /app
+    build:
+      context: ./backend/python/
+      dockerfile: docker/cpu/Dockerfile
+      target: dev
+      # secrets:
+      #   - github_token
+      args:
+        progress: plain
+    volumes:
+      - type: bind
+        source: ./backend/python/
+        target: /app
+    # ports:
+    #   - "8000:8000"
+    # command:
+    #   poetry run python src/main.py
+    environment:
+        PYTHONPATH: "/app/src"
+        PYTHONUNBUFFERED: 1
+
+  backend_golang:
+    tty: true
+    stdin_open: true
+    user: root
+    working_dir: /app
+    build:
+      context: ./backend/golang/
+      dockerfile: docker/cpu/Dockerfile
+      # secrets:
+      #   - github_token
+      args:
+        progress: plain
+    volumes:
+      - type: bind
+        source: ./backend/golang/
+        target: /app
+    # ports:
+    #   - "8000:8000"
+    # command:
+    #   go run src/main.go
+
+  backend_node:
+    build:
+      context: ./backend/node/
+      dockerfile: docker/Dockerfile
+      args:
+        progress: plain
+    volumes:
+      - type: bind
+        source: ./backend/node/
+        target: /app
+    working_dir: /app
+    # ports:
+    #   - 8000:8000
+    stdin_open: true
+    tty: true
+    # command: bash -c "npm install && npm start"
+
+# secrets:
+#   github_token:
+#     file: ${HOME}/.git-credentials
