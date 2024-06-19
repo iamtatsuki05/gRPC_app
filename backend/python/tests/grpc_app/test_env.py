@@ -1,4 +1,4 @@
-from project.env import VERSION
+from grpc_app.env import VERSION
 
 
 def test_version():
