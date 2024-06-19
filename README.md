@@ -1,4 +1,4 @@
-# mygRPC_app
+# gRPC_app
 
 ## How to operate docker
 ### setup
