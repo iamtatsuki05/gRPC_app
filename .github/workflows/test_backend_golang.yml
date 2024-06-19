@@ -1,0 +1,62 @@
+name: test
+on:
+  pull_request:
+    branches:
+      - '**'
+  workflow_call:
+    inputs:
+      check-service-test:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  run_test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - uses: actions/setup-go@v4
+      working-directory: backend/golang
+      id: setup-go
+      with:
+        go-version-file: "go.mod"
+
+    - name: Download Go modules
+      working-directory: backend/golang
+      shell: bash
+      if: ${{ steps.setup-go.outputs.cache-hit != 'true' }}
+      run: go mod download
+
+    - name: Install linters and formatters
+      run: |
+        GOBIN=$HOME/go/bin go install golang.org/x/lint/golint@latest
+        GOBIN=$HOME/go/bin go install honnef.co/go/tools/cmd/staticcheck@latest
+        GOBIN=$HOME/go/bin go install golang.org/x/tools/cmd/goimports@latest
+      env:
+        PATH: $HOME/go/bin:$PATH
+
+    - name: Run go fmt
+      working-directory: backend/golang
+      run: go fmt ./src
+
+    - name: Run goimports
+      working-directory: backend/golang
+      run: goimports ./src
+
+    - name: Run golint
+      working-directory: backend/golang
+      run: golint -set_exit_status ./src
+
+    - name: Run go vet
+      working-directory: backend/golang
+      run: go vet ./src
+
+    - name: Run staticcheck
+      working-directory: backend/golangvv
+      run: staticcheck ./src
+
+    - name: Run go test
+      working-directory: backend/golang
+      run: go test -v ./src
