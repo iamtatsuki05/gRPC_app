@@ -26,6 +26,8 @@ jupyterlab = "^3.3.4"
 tqdm = "^4.64.0"
 scikit-learn = "^1.1.1"
 openpyxl = "^3.1.2"
+grpcio = "^1.64.1"
+grpcio-tools = "^1.64.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0.0"
